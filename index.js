@@ -51,16 +51,10 @@ app.get("/api/users", async (req, res) => {
   try {
     const users = await User.find({});
 
-    const deleted = await Excercise.deleteMany({})
-
-    console.log(deleted)
-
     const usersArray = users.map(user => ({
       username: user.username,
       _id: user._id
     }))
-
-    console.log(users)
 
     res.json(usersArray)
   } catch (error) {
