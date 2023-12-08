@@ -100,7 +100,23 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 app.get('/api/users/:_id/logs', async (req, res) => {
   try {
     const theUser = await User.findById(req.params._id)
-    const excercises = await Excercise.find({ user_id: req.params._id })
+
+    let query = { user_id: req.params._id } 
+
+    if (req.query.from) {
+      query.date = { $gte: new Date(req.query.from) };
+    }
+
+    if (req.query.to) {
+      const toFilter = query.date ? query.date.$lte : {};
+      query.date = { ...toFilter, $lte: new Date(req.query.to) };
+    }
+
+    const excercises = await Excercise.find(query)
+
+    if (req.query.limit) {
+      excercises = excercises.slice(0, parseInt(req.query.limit));
+    }
 
     res.json({
       username: theUser.username,
@@ -109,7 +125,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
       log: excercises.map(item => ({
         description: item.description,
         duration: item.duration,
-        date: item.date,
+        date: new Date(item.date).toDateString(),
       }))
     })
 
