@@ -68,8 +68,8 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     const theUser = await User.findById(req.params._id)
     
     const theDate = req.body.date
-      ? new Date(req.body.date).toISOString().split('T')[0]
-      : new Date().toISOString().split('T')[0];
+      ? req.body.date
+      : new Date();
 
     const newExcercise = await Excercise.create({
       user_id: req.params._id,
@@ -78,12 +78,14 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       date: theDate,
     })
 
+    console.log(newExcercise);
+
     res.json({
       _id: theUser._id,
       username: theUser.username,
-      description: newExercise.description,
-      duration: newExercise.duration,
-      date: new Date(newExercise.date).toDateString(),
+      description: newExcercise.description,
+      duration: newExcercise.duration,
+      date: new Date(newExcercise.date).toDateString(),
     });
 
   } catch (error) {
