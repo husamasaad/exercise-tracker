@@ -71,7 +71,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       ? new Date(req.body.date).toISOString().split('T')[0]
       : new Date().toISOString().split('T')[0];
 
-    const newExcercise = Excercise.create({
+    const newExcercise = await Excercise.create({
       user_id: req.params._id,
       description: req.body.description,
       duration: req.body.duration,
