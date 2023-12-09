@@ -113,6 +113,10 @@ app.get("/api/users/:_id/logs", async function (req, res) {
         user_id: userId,
         date: { $lt: new Date(to) }
       }
+    } else {
+      query = {
+        user_id: userId
+      }
     }
 
     let exercises = await Excercise.find(query)
